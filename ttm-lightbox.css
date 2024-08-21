@@ -1,0 +1,198 @@
+:root {
+	--ttm-lightbox-border-color: rgba( 255, 255, 255, 0.8 );
+	--ttm-lightbox-border-style: solid;
+	--ttm-lightbox-border-width: 0.25rem;
+	--ttm-lightbox-height: calc( 100vh - 75px );
+	--ttm-lightbox-transition-duration: 300ms;
+	--ttm-lightbox-transition-timing-function: ease-in-out;
+	--ttm-lightbox-width: calc( 100vw - 100px );
+}
+
+.ttm-lightbox-active {
+	overflow: hidden;
+	position: relative;
+}
+
+[data-lightbox] {
+	cursor: pointer;
+}
+
+.ttm-lightbox {
+	align-items: center;
+	background-color: transparent;
+	bottom: 0;
+	display: flex;
+	justify-content: center;
+	left: 0;
+	position: absolute;
+	right: 0;
+	top: 0;
+	transition-duration: var( --ttm-lightbox-transition-duration );
+	transition-property: background-color;
+	transition-timing-function: var( --ttm-lightbox-transition-timing-function );
+}
+
+.ttm-lightbox.ttm-lightbox-show {
+	background-color: rgba( 0, 0, 0, 0.8 );
+}
+
+.ttm-lightbox-inner {
+	border-color: var( --ttm-lightbox-border-color );
+	border-style: var( --ttm-lightbox-border-style );
+	border-width: var( --ttm-lightbox-border-width );
+	opacity: 0;
+	position: fixed;
+	top: 50%;
+	transform: translateY(-50%);
+	transition-duration: var( --ttm-lightbox-transition-duration );
+	transition-property: height, max-height, max-width, opacity, width;
+	transition-timing-function: var( --ttm-lightbox-transition-timing-function );
+}
+
+.ttm-lightbox-inner.ttm-lightbox-show {
+	opacity: 1;
+}
+
+.ttm-lightbox-caption {
+    background-color: rgba(255, 255, 255, 0.8);
+    bottom: 0;
+    left: 0;
+    padding: 1rem;
+	position: absolute;
+    right: 0;
+	transition-duration: var( --ttm-lightbox-transition-duration );
+	transition-property: all;
+	transition-timing-function: var( --ttm-lightbox-transition-timing-function );
+}
+
+.ttm-lightbox-image {
+	bottom: 0;
+	cursor: pointer;
+	left: 0;
+	object-fit: cover;
+	object-position: center center;
+	position: absolute;
+	right: 0;
+	top: 0;
+	transition-duration: var( --ttm-lightbox-transition-duration );
+	transition-property: height, max-height, max-width, opacity, width;
+	transition-timing-function: var( --ttm-lightbox-transition-timing-function );
+}
+
+.ttm-lightbox-image.ttm-lightbox-fade {
+	opacity: 0;
+}
+
+.ttm-lightbox-inner,
+.ttm-lightbox-image {
+	height: var( --ttm-lightbox-height );
+	width: var( --ttm-lightbox-width );
+}
+
+.ttm-lightbox-prev,
+.ttm-lightbox-next,
+.ttm-lightbox-close {
+	align-items: center;
+	background: transparent;
+	border: none;
+	cursor: pointer;
+	display: flex;
+	justify-content: center;
+	padding: 0;
+	position: absolute;
+	transition-duration: var( --ttm-lightbox-transition-duration );
+	transition-property: background, opacity;
+	transition-timing-function: var( --ttm-lightbox-transition-timing-function );
+	z-index: 1024;
+}
+
+.ttm-lightbox-prev,
+.ttm-lightbox-next {
+	height: 100%;
+	width: 50%;
+}
+
+.ttm-lightbox-prev.ttm-lightbox-disabled,
+.ttm-lightbox-next.ttm-lightbox-disabled {
+	cursor: auto;
+}
+
+.ttm-lightbox-close {
+	right: 0;
+	top: 0;
+	z-index: 2048;
+}
+
+.ttm-lightbox-prev {
+	left: 0;
+	top: 50%;
+	transform: translateY( -50% );
+}
+
+.ttm-lightbox-next {
+	right: 0;
+	top: 50%;
+	transform: translateY( -50% );
+}
+
+.ttm-lightbox-disabled {
+	opacity: 0;
+}
+
+.ttm-lightbox-prev::after,
+.ttm-lightbox-next::after,
+.ttm-lightbox-close::after {
+	background-color: rgba( 255, 255, 255, 0.25 );
+	background-size: contain;
+	content: '';
+	padding: 20px;
+	transition-duration: var( --ttm-lightbox-transition-duration );
+	transition-property: background, opacity;
+	transition-timing-function: var( --ttm-lightbox-transition-timing-function );
+}
+
+.ttm-lightbox-prev::after,
+.ttm-lightbox-next::after {
+	padding: 20px;
+	position: absolute;
+}
+
+.ttm-lightbox-close::after {
+	background-image: url("data:image/svg+xml,%3C%3Fxml version='1.0' %3F%3E%3C!DOCTYPE svg PUBLIC '-//W3C//DTD SVG 1.1//EN' 'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'%3E%3Csvg height='512px' id='Layer_1' style='enable-background:new 0 0 512 512;' version='1.1' viewBox='0 0 512 512' width='512px' xml:space='preserve' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'%3E%3Cpath d='M443.6,387.1L312.4,255.4l131.5-130c5.4-5.4,5.4-14.2,0-19.6l-37.4-37.6c-2.6-2.6-6.1-4-9.8-4c-3.7,0-7.2,1.5-9.8,4 L256,197.8L124.9,68.3c-2.6-2.6-6.1-4-9.8-4c-3.7,0-7.2,1.5-9.8,4L68,105.9c-5.4,5.4-5.4,14.2,0,19.6l131.5,130L68.4,387.1 c-2.6,2.6-4.1,6.1-4.1,9.8c0,3.7,1.4,7.2,4.1,9.8l37.4,37.6c2.7,2.7,6.2,4.1,9.8,4.1c3.5,0,7.1-1.3,9.8-4.1L256,313.1l130.7,131.1 c2.7,2.7,6.2,4.1,9.8,4.1c3.5,0,7.1-1.3,9.8-4.1l37.4-37.6c2.6-2.6,4.1-6.1,4.1-9.8C447.7,393.2,446.2,389.7,443.6,387.1z'/%3E%3C/svg%3E");
+}
+
+.ttm-lightbox-prev::after {
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='currentColor' class='bi bi-chevron-left' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0'/%3E%3C/svg%3E");
+	left: 0;
+}
+.ttm-lightbox-next::after {
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='currentColor' class='bi bi-chevron-right' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708'/%3E%3C/svg%3E");
+	right: 0;
+}
+
+.ttm-lightbox-prev:focus::after,
+.ttm-lightbox-next:focus::after,
+.ttm-lightbox-close:focus::after,
+.ttm-lightbox-prev:hover::after,
+.ttm-lightbox-next:hover::after,
+.ttm-lightbox-close:hover::after {
+	background-color: rgba( 255, 255, 255, 0.5 );
+	opacity: 1;
+}
+
+.ttm-lightbox-prev:focus,
+.ttm-lightbox-prev:focus-visible,
+.ttm-lightbox-next:focus,
+.ttm-lightbox-next:focus-visible,
+.ttm-lightbox-close:focus,
+.ttm-lightbox-close:focus-visible {
+	outline: none;
+}
+.ttm-lightbox-prev:focus::after,
+.ttm-lightbox-prev:focus-visible::after,
+.ttm-lightbox-next:focus::after,
+.ttm-lightbox-next:focus-visible::after,
+.ttm-lightbox-close:focus::after,
+.ttm-lightbox-close:focus-visible::after {
+	outline: 2px solid white;
+}
