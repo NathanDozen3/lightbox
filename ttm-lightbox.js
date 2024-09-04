@@ -1,5 +1,23 @@
 (function() {
 
+	const i18n = {
+		"es": {
+			"Close": "Cerrar",
+			"Next": "Próximo",
+			"Previous": "Previo"
+		},
+		"fr": {
+			"Close": "Fermer",
+			"Next": "Suivant",
+			"Previous": "Précédent"
+		},
+		"it": {
+			"Close": "Chiudere",
+			"Next": "Prossimo",
+			"Previous": "Precedente"
+		}
+	};
+
 	const TTM_LIGHTBOX_ID = 'ttm-lightbox';
 	const TTM_LIGHTBOX_CLASS = 'ttm-lightbox';
 	const TTM_LIGHTBOX_INNER_CLASS = 'ttm-lightbox-inner';
@@ -8,10 +26,12 @@
 	const TTM_LIGHTBOX_IMAGE_CLASS = 'ttm-lightbox-image';
 	const TTM_LIGHTBOX_IMAGE_SELECTOR = '.' + TTM_LIGHTBOX_IMAGE_CLASS
 	const TTM_LIGHTBOX_CAPTION_CLASS = 'ttm-lightbox-caption';
+	const TTM_LIGHTBOX_CAPTION_SELECTOR = '.' + TTM_LIGHTBOX_CAPTION_CLASS;
 	const TTM_LIGHTBOX_ACTIVE_CLASS = 'ttm-lightbox-active';
 	const TTM_LIGHTBOX_SHOW_CLASS = 'ttm-lightbox-show';
 	const TTM_LIGHTBOX_FADE_CLASS = 'ttm-lightbox-fade';
 	const TTM_LIGHTBOX_DISABLED_CLASS = 'ttm-lightbox-disabled';
+	const TTM_LIGHTBOX_SCREENREADER_CLASS = 'ttm-lightbox-screen-reader-text';
 
 	const TTM_LIGHTBOX_CLOSE_CLASS = 'ttm-lightbox-close';
 	const TTM_LIGHTBOX_PREV_CLASS = 'ttm-lightbox-prev';
@@ -54,7 +74,8 @@
 				img.remove();
 			}, TTM_LIGHTBOX_TIMEOUT_LONG );
 		});
-		lightbox.querySelectorAll( TTM_LIGHTBOX_CAPTION_CLASS ).forEach( ( caption ) => {
+		lightbox.querySelectorAll( TTM_LIGHTBOX_CAPTION_SELECTOR ).forEach( ( caption ) => {
+			console.log( caption )
 			caption.classList.add( TTM_LIGHTBOX_FADE_CLASS );
 			setTimeout( () => {
 				caption.remove();
@@ -224,18 +245,49 @@
 		lightbox.appendChild( inner );
 
 		const close = createElement( 'button', { 'class' : TTM_LIGHTBOX_CLOSE_CLASS } );
+		let closeSpan = createElement( 'span', { 'class' : TTM_LIGHTBOX_SCREENREADER_CLASS } );
+		let closeText = document.createTextNode( __( 'Close' ) );
+		closeSpan.appendChild( closeText );
+		close.appendChild( closeSpan );		
 		close.addEventListener( 'click', closeLightbox );
 		inner.appendChild( close );
 
 		const prev = createElement( 'button', { 'class' : TTM_LIGHTBOX_PREV_CLASS,  } );
+		let prevSpan = createElement( 'span', { 'class' : TTM_LIGHTBOX_SCREENREADER_CLASS } );
+		let prevText = document.createTextNode( __( 'Previous' ) );
+		prevSpan.appendChild( prevText );
+		prev.appendChild( prevSpan );
 		prev.addEventListener( 'click', () => moveLightbox(-1) );
 		inner.appendChild( prev );
 
 		const next = createElement( 'button', { 'class' : TTM_LIGHTBOX_NEXT_CLASS } );
+		let nextSpan = createElement( 'span', { 'class' : TTM_LIGHTBOX_SCREENREADER_CLASS } );
+		let nextText = document.createTextNode( __( 'Next' ) );
+		nextSpan.appendChild( nextText );
+		next.appendChild( nextSpan );
 		next.addEventListener( 'click', () => moveLightbox(1) );
 		inner.appendChild( next );
 
 		document.body.appendChild( lightbox );
+		document.querySelector( TTM_LIGHTBOX_NEXT_SELECTOR ).focus();
+	}
+
+	const __ = ( valueToTranslate ) => {
+		let lang = navigator.language;
+
+		if( null == i18n[ lang ] ) {
+			lang = lang.slice( 0, lang.indexOf( '-' ) );
+		}
+
+		if( null == i18n[ lang ] ) {
+			return valueToTranslate;
+		}
+
+		if( null == i18n[ lang ][ valueToTranslate ] ) {
+			return valueToTranslate;
+		}
+
+		return i18n[ lang ][ valueToTranslate ];
 	}
 
 	addEventListener( 'keydown', keydownEvent );
