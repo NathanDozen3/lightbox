@@ -4,6 +4,8 @@
   "description": "TTM Lightbox is vanilla JavaScript library used to overlay images on top of the current page.",
   "main": "ttm-lightbox.js",
   "scripts": {
+    "build": "tsc --build",
+    "clean": "tsc --build --clean",
     "stylelint": "npx stylelint '**/*.scss' --fix",
     "sass-dev": "sass --watch --update --style=expanded src/scss:src/css",
     "sass-prod": "sass --no-source-map --style=compressed src/scss:dist/css"
@@ -21,6 +23,7 @@
   "devDependencies": {
     "sass": "^1.78.0",
     "stylelint": "^16.9.0",
-    "stylelint-config-standard-scss": "^13.1.0"
+    "stylelint-config-standard-scss": "^13.1.0",
+    "typescript": "^5.5.4"
   }
 }
