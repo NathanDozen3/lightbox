@@ -33,6 +33,8 @@
 	const TTM_LIGHTBOX_DISABLED_CLASS = 'ttm-lightbox-disabled';
 	const TTM_LIGHTBOX_SCREENREADER_CLASS = 'ttm-lightbox-screen-reader-text';
 
+	const TTM_LIGHTBOX_BUTTON_CLASS = 'ttm-lightbox-button';
+	const TTM_LIGHTBOX_NAV_CLASS = 'ttm-lightbox-nav';
 	const TTM_LIGHTBOX_CLOSE_CLASS = 'ttm-lightbox-close';
 	const TTM_LIGHTBOX_PREV_CLASS = 'ttm-lightbox-prev';
 	const TTM_LIGHTBOX_NEXT_CLASS = 'ttm-lightbox-next';
@@ -77,7 +79,6 @@
 			}, TTM_LIGHTBOX_TIMEOUT_LONG );
 		});
 		lightbox.querySelectorAll( TTM_LIGHTBOX_CAPTION_SELECTOR ).forEach( ( caption ) => {
-			console.log( caption )
 			caption.classList.add( TTM_LIGHTBOX_FADE_CLASS );
 			setTimeout( () => {
 				caption.remove();
@@ -231,7 +232,10 @@
 
 	const createElement = ( name, atts ) => {
 		const el = document.createElement( name );
-		for( const [ key, value ] of Object.entries( atts ) ) {
+		for( let [ key, value ] of Object.entries( atts ) ) {
+			if( Array.isArray( value ) ) {
+				value = value.join( ' ' );
+			}
 			el.setAttribute( key, value );
 		}
 		return el;
@@ -246,7 +250,7 @@
 		inner.setAttribute( 'class', TTM_LIGHTBOX_INNER_CLASS );
 		lightbox.appendChild( inner );
 
-		const close = createElement( 'button', { 'class' : TTM_LIGHTBOX_CLOSE_CLASS } );
+		const close = createElement( 'button', { 'class' : [ TTM_LIGHTBOX_CLOSE_CLASS, TTM_LIGHTBOX_BUTTON_CLASS ] } );
 		let closeSpan = createElement( 'span', { 'class' : TTM_LIGHTBOX_SCREENREADER_CLASS } );
 		let closeText = document.createTextNode( __( 'Close' ) );
 		closeSpan.appendChild( closeText );
@@ -254,7 +258,7 @@
 		close.addEventListener( 'click', closeLightbox );
 		inner.appendChild( close );
 
-		const prev = createElement( 'button', { 'class' : TTM_LIGHTBOX_PREV_CLASS,  } );
+		const prev = createElement( 'button', { 'class' : [ TTM_LIGHTBOX_PREV_CLASS, TTM_LIGHTBOX_NAV_CLASS, TTM_LIGHTBOX_BUTTON_CLASS  ] } );
 		let prevSpan = createElement( 'span', { 'class' : TTM_LIGHTBOX_SCREENREADER_CLASS } );
 		let prevText = document.createTextNode( __( 'Previous' ) );
 		prevSpan.appendChild( prevText );
@@ -262,7 +266,7 @@
 		prev.addEventListener( 'click', () => moveLightbox(-1) );
 		inner.appendChild( prev );
 
-		const next = createElement( 'button', { 'class' : TTM_LIGHTBOX_NEXT_CLASS } );
+		const next = createElement( 'button', { 'class' : [ TTM_LIGHTBOX_NEXT_CLASS, TTM_LIGHTBOX_NAV_CLASS, TTM_LIGHTBOX_BUTTON_CLASS ] } );
 		let nextSpan = createElement( 'span', { 'class' : TTM_LIGHTBOX_SCREENREADER_CLASS } );
 		let nextText = document.createTextNode( __( 'Next' ) );
 		nextSpan.appendChild( nextText );
