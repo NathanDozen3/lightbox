@@ -47,6 +47,8 @@
 	const TTM_LIGHTBOX_TIMEOUT_LONG = 300;
 
 	let lastFocus = null;
+	let touchstartX = 0
+	let touchendX = 0
 
 	const keydownEvent = ( event ) => {
 		if( ! hasLightbox() ) return;
@@ -289,6 +291,26 @@
 
 		return i18n[ lang ][ valueToTranslate ];
 	}
+		
+	function checkDirection() {
+		if( touchendX < touchstartX ) {
+			moveLightbox(1);
+		}
+		if( touchendX > touchstartX ) {
+			moveLightbox(-1);
+		}
+	}
+
+	document.addEventListener( 'touchstart', e => {
+		touchstartX = e.changedTouches[0].screenX;
+	});
+
+	document.addEventListener( 'touchend', e => {
+		touchendX = e.changedTouches[0].screenX;
+		if( hasLightbox() ) {
+			checkDirection();
+		}
+	});
 
 	addEventListener( 'keydown', keydownEvent );
 

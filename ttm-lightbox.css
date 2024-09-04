@@ -2,7 +2,7 @@
 	--ttm-lightbox-border-color: rgba( 255, 255, 255, 0.8 );
 	--ttm-lightbox-border-style: solid;
 	--ttm-lightbox-border-width: 0.25rem;
-	--ttm-lightbox-height: calc( 100vh - 75px );
+	--ttm-lightbox-height: calc( 100dvh - 75px );
 	--ttm-lightbox-transition-duration: 300ms;
 	--ttm-lightbox-transition-timing-function: ease-in-out;
 	--ttm-lightbox-width: calc( 100vw - 100px );
