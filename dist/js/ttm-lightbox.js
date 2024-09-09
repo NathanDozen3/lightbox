@@ -129,12 +129,12 @@
     var isFirstImageInLightbox = function (src) {
         var _a;
         var subset = getCurrentLightboxSubset();
-        return src === ((_a = subset[0]) === null || _a === void 0 ? void 0 : _a.getAttribute('src'));
+        return src === ((_a = subset[0]) === null || _a === void 0 ? void 0 : _a.getAttribute('href'));
     };
     var isLastImageInLightbox = function (src) {
         var _a;
         var subset = getCurrentLightboxSubset();
-        return src === ((_a = subset[subset.length - 1]) === null || _a === void 0 ? void 0 : _a.getAttribute('src'));
+        return src === ((_a = subset[subset.length - 1]) === null || _a === void 0 ? void 0 : _a.getAttribute('href'));
     };
     var getCurrentLightboxImage = function () {
         var lightbox = getLightbox();
@@ -146,7 +146,7 @@
         var images = document.querySelectorAll(TTM_LIGHTBOX_IMAGE_ATTRIBUTE_SELECTOR);
         var attribute = '';
         for (var i = 0; i < images.length; i++) {
-            if (((_a = images[i]) === null || _a === void 0 ? void 0 : _a.getAttribute('src')) === current.getAttribute('src')) {
+            if (((_a = images[i]) === null || _a === void 0 ? void 0 : _a.getAttribute('href')) === current.getAttribute('src')) {
                 attribute = (_b = images[i]) === null || _b === void 0 ? void 0 : _b.getAttribute(TTM_LIGHTBOX_IMAGE_ATTRIBUTE);
             }
         }
@@ -158,16 +158,26 @@
         var current = getCurrentLightboxImage();
         var subset = getCurrentLightboxSubset();
         for (var i = 0; i < subset.length; i++) {
-            if (current.getAttribute('src') === ((_a = subset[i]) === null || _a === void 0 ? void 0 : _a.getAttribute('src')) &&
+            if (current.getAttribute('src') === ((_b = (_a = subset[i]) === null || _a === void 0 ? void 0 : _a.querySelector('img')) === null || _b === void 0 ? void 0 : _b.getAttribute('src')) &&
                 i + amt < subset.length &&
                 i + amt >= 0) {
-                var img = (_b = subset[i + amt]) !== null && _b !== void 0 ? _b : null;
-                addImgToLightbox(img);
-                return;
+                var a = subset[i + amt];
+                aClickEvent(a);
             }
         }
     };
-    var boxClickEvent = function (img) {
+    var aClickEvent = function (a) {
+        var _a;
+        var href = a === null || a === void 0 ? void 0 : a.getAttribute('href');
+        if (href == null)
+            return;
+        var img = document.createElement('img');
+        img.setAttribute('src', href);
+        var alt = (_a = a === null || a === void 0 ? void 0 : a.querySelector('img')) === null || _a === void 0 ? void 0 : _a.getAttribute('alt');
+        if (typeof alt != 'string') {
+            alt = '';
+        }
+        img.setAttribute('alt', alt);
         showLightbox();
         addImgToLightbox(img);
     };
@@ -286,15 +296,16 @@
         }
     });
     addEventListener('keydown', keydownEvent);
-    document.querySelectorAll(TTM_LIGHTBOX_IMAGE_ATTRIBUTE_SELECTOR).forEach(function (box) {
-        box.setAttribute('tabindex', '0');
-        box.setAttribute('role', 'button');
-        box.addEventListener('click', function () { boxClickEvent(box); });
-        box.addEventListener('keydown', function (event) {
+    document.querySelectorAll(TTM_LIGHTBOX_IMAGE_ATTRIBUTE_SELECTOR).forEach(function (a) {
+        a.addEventListener('click', function (e) {
+            e.preventDefault();
+            aClickEvent(a);
+        });
+        a.addEventListener('keydown', function (event) {
             lastFocus = event.target;
             var e = event;
             if (e.code === 'Space' || e.code === 'Enter') {
-                box.click();
+                a.click();
             }
             if (hasLightbox()) {
                 focusSelector(TTM_LIGHTBOX_NEXT_SELECTOR);

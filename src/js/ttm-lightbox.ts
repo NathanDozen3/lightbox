@@ -147,12 +147,12 @@
 
 	const isFirstImageInLightbox = ( src : string ) => {
 		let subset = getCurrentLightboxSubset();
-		return src === subset[0]?.getAttribute( 'src' );
+		return src === subset[0]?.getAttribute( 'href' );
 	}
 
 	const isLastImageInLightbox = ( src : string ) => {
 		let subset = getCurrentLightboxSubset();
-		return src === subset[ subset.length - 1 ]?.getAttribute( 'src' );
+		return src === subset[ subset.length - 1 ]?.getAttribute( 'href' );
 	}
 
 	const getCurrentLightboxImage = () => {
@@ -167,7 +167,7 @@
 		let attribute = '';
 
 		for( let i = 0; i < images.length; i++ ) {
-			if( images[i]?.getAttribute( 'src' ) === current.getAttribute( 'src' ) ) {
+			if( images[i]?.getAttribute( 'href' ) === current.getAttribute( 'src' ) ) {
 				attribute = images[i]?.getAttribute( TTM_LIGHTBOX_IMAGE_ATTRIBUTE ) as string;
 			}
 		}
@@ -182,18 +182,28 @@
 
 		for( let i = 0; i < subset.length; i++ ) {
 			if(
-				current.getAttribute( 'src' ) === subset[i]?.getAttribute( 'src' ) &&
+				current.getAttribute( 'src' ) === subset[i]?.querySelector( 'img' )?.getAttribute( 'src' ) &&
 				i + amt < subset.length &&
 				i + amt >= 0
 			) {
-				let img = subset[ i + amt ] ?? null;
-				addImgToLightbox( img );
-				return;
+				let a = subset[ i + amt ] as unknown as HTMLAnchorElement;
+				aClickEvent( a );
 			}
 		}
 	}
 
-	const boxClickEvent = ( img : HTMLImageElement ) => {
+	const aClickEvent = ( a : HTMLAnchorElement ) => {
+		let href = a?.getAttribute( 'href' );
+		if( href == null ) return;
+		let img = document.createElement( 'img' );
+		img.setAttribute( 'src', href );
+
+		let alt = a?.querySelector( 'img' )?.getAttribute( 'alt' );
+		if( typeof alt != 'string' ) {
+			alt = '';
+		}
+		img.setAttribute( 'alt', alt );
+
 		showLightbox();
 		addImgToLightbox( img );
 	}
@@ -337,18 +347,19 @@
 
 	addEventListener( 'keydown', keydownEvent );
 
-	document.querySelectorAll( TTM_LIGHTBOX_IMAGE_ATTRIBUTE_SELECTOR ).forEach( ( box ) => {
+	document.querySelectorAll( TTM_LIGHTBOX_IMAGE_ATTRIBUTE_SELECTOR ).forEach( ( a ) => {
 
-		box.setAttribute( 'tabindex', '0' );
-		box.setAttribute( 'role', 'button' );
+		a.addEventListener( 'click', ( e : Event ) => {
+			e.preventDefault();
+			aClickEvent( a as HTMLAnchorElement );
+		});
 
-		box.addEventListener( 'click', () => { boxClickEvent( box as HTMLImageElement ) } );
-		box.addEventListener( 'keydown', ( event : Event ) => {
+		a.addEventListener( 'keydown', ( event : Event ) => {
 			lastFocus = event.target as HTMLElement;
 
 			let e = event as KeyboardEvent;
 			if( e.code === 'Space' || e.code === 'Enter' ) {
-				( box as HTMLElement ).click();
+				( a as HTMLElement ).click();
 			}
 			if( hasLightbox() ) {
 				focusSelector( TTM_LIGHTBOX_NEXT_SELECTOR );
