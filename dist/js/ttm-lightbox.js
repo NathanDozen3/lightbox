@@ -1,3 +1,4 @@
+"use strict";
 (function () {
     var i18n = {
         "es": {
@@ -45,17 +46,23 @@
     var touchstartX = 0;
     var touchendX = 0;
     var focusElement = function (el) { return el.focus(); };
+    var focusSelector = function (selector) {
+        var element = document.querySelector(selector);
+        if (null != element) {
+            focusElement(element);
+        }
+    };
     var keydownEvent = function (event) {
         if (!hasLightbox())
             return;
         switch (event.key) {
             case 'ArrowLeft':
                 moveLightbox(-1);
-                focusElement(document.querySelector(TTM_LIGHTBOX_PREV_SELECTOR));
+                focusSelector(TTM_LIGHTBOX_PREV_SELECTOR);
                 break;
             case 'ArrowRight':
                 moveLightbox(1);
-                focusElement(document.querySelector(TTM_LIGHTBOX_NEXT_SELECTOR));
+                focusSelector(TTM_LIGHTBOX_NEXT_SELECTOR);
                 break;
             case 'Escape':
                 closeLightbox();
@@ -63,6 +70,8 @@
         }
     };
     var addImgToLightbox = function (img) {
+        if (img === null)
+            return;
         var lightbox = getLightbox();
         lightbox.querySelectorAll(TTM_LIGHTBOX_IMAGE_SELECTOR).forEach(function (img) {
             img.classList.add(TTM_LIGHTBOX_FADE_CLASS);
@@ -103,7 +112,7 @@
         var next = document.querySelector(TTM_LIGHTBOX_NEXT_SELECTOR);
         if (isLastImageInLightbox(img.src)) {
             disableElement(next);
-            focusElement(document.querySelector(TTM_LIGHTBOX_CLOSE_SELECTOR));
+            focusSelector(TTM_LIGHTBOX_CLOSE_SELECTOR);
         }
         else {
             enableElement(next);
@@ -118,37 +127,42 @@
         el.disabled = true;
     };
     var isFirstImageInLightbox = function (src) {
+        var _a;
         var subset = getCurrentLightboxSubset();
-        return src === subset[0].getAttribute('src');
+        return src === ((_a = subset[0]) === null || _a === void 0 ? void 0 : _a.getAttribute('src'));
     };
     var isLastImageInLightbox = function (src) {
+        var _a;
         var subset = getCurrentLightboxSubset();
-        return src === subset[subset.length - 1].getAttribute('src');
+        return src === ((_a = subset[subset.length - 1]) === null || _a === void 0 ? void 0 : _a.getAttribute('src'));
     };
     var getCurrentLightboxImage = function () {
         var lightbox = getLightbox();
         return lightbox.querySelector('img');
     };
     var getCurrentLightboxSubset = function () {
+        var _a, _b;
         var current = getCurrentLightboxImage();
         var images = document.querySelectorAll(TTM_LIGHTBOX_IMAGE_ATTRIBUTE_SELECTOR);
         var attribute = '';
         for (var i = 0; i < images.length; i++) {
-            if (images[i].getAttribute('src') === current.getAttribute('src')) {
-                attribute = images[i].getAttribute(TTM_LIGHTBOX_IMAGE_ATTRIBUTE);
+            if (((_a = images[i]) === null || _a === void 0 ? void 0 : _a.getAttribute('src')) === current.getAttribute('src')) {
+                attribute = (_b = images[i]) === null || _b === void 0 ? void 0 : _b.getAttribute(TTM_LIGHTBOX_IMAGE_ATTRIBUTE);
             }
         }
         var subset = document.querySelectorAll('[' + TTM_LIGHTBOX_IMAGE_ATTRIBUTE + '="' + attribute + '"]');
         return subset;
     };
     var moveLightbox = function (amt) {
+        var _a, _b;
         var current = getCurrentLightboxImage();
         var subset = getCurrentLightboxSubset();
         for (var i = 0; i < subset.length; i++) {
-            if (current.getAttribute('src') === subset[i].getAttribute('src') &&
+            if (current.getAttribute('src') === ((_a = subset[i]) === null || _a === void 0 ? void 0 : _a.getAttribute('src')) &&
                 i + amt < subset.length &&
                 i + amt >= 0) {
-                addImgToLightbox(subset[i + amt]);
+                var img = (_b = subset[i + amt]) !== null && _b !== void 0 ? _b : null;
+                addImgToLightbox(img);
                 return;
             }
         }
@@ -231,7 +245,7 @@
         next.addEventListener('click', function () { return moveLightbox(1); });
         inner.appendChild(next);
         document.body.appendChild(lightbox);
-        focusElement(document.querySelector(TTM_LIGHTBOX_NEXT_SELECTOR));
+        focusSelector(TTM_LIGHTBOX_NEXT_SELECTOR);
     };
     var __ = function (valueToTranslate) {
         var lang = navigator.language;
@@ -255,10 +269,18 @@
         }
     }
     document.addEventListener('touchstart', function (e) {
-        touchstartX = e.changedTouches[0].screenX;
+        var _a;
+        var screenX = (_a = e.changedTouches[0]) === null || _a === void 0 ? void 0 : _a.screenX;
+        if (typeof screenX !== 'undefined') {
+            touchstartX = screenX;
+        }
     });
     document.addEventListener('touchend', function (e) {
-        touchendX = e.changedTouches[0].screenX;
+        var _a;
+        var screenX = (_a = e.changedTouches[0]) === null || _a === void 0 ? void 0 : _a.screenX;
+        if (typeof screenX !== 'undefined') {
+            touchendX = screenX;
+        }
         if (hasLightbox()) {
             checkDirection();
         }
@@ -270,11 +292,12 @@
         box.addEventListener('click', function () { boxClickEvent(box); });
         box.addEventListener('keydown', function (event) {
             lastFocus = event.target;
-            if (event.code === 'Space' || event.code === 'Enter') {
+            var e = event;
+            if (e.code === 'Space' || e.code === 'Enter') {
                 box.click();
             }
             if (hasLightbox()) {
-                focusElement(document.querySelector(TTM_LIGHTBOX_NEXT_SELECTOR));
+                focusSelector(TTM_LIGHTBOX_NEXT_SELECTOR);
             }
         });
     });
