@@ -163,7 +163,7 @@
 	const getCurrentLightboxSubset = () => {
 		let current = getCurrentLightboxImage() as HTMLImageElement;
 		let images = document.querySelectorAll( TTM_LIGHTBOX_IMAGE_ATTRIBUTE_SELECTOR );
-		
+
 		let attribute = '';
 
 		for( let i = 0; i < images.length; i++ ) {
@@ -171,7 +171,7 @@
 				attribute = images[i]?.getAttribute( TTM_LIGHTBOX_IMAGE_ATTRIBUTE ) as string;
 			}
 		}
-		
+
 		let subset = document.querySelectorAll( '[' + TTM_LIGHTBOX_IMAGE_ATTRIBUTE + '="' + attribute + '"]' ) as NodeListOf<HTMLImageElement>;
 		return subset;
 	}
@@ -179,9 +179,9 @@
 	const moveLightbox = ( amt : number ) => {
 		let current = getCurrentLightboxImage() as HTMLImageElement;
 		let subset = getCurrentLightboxSubset();
-		
+
 		for( let i = 0; i < subset.length; i++ ) {
-			if( 
+			if(
 				current.getAttribute( 'src' ) === subset[i]?.getAttribute( 'src' ) &&
 				i + amt < subset.length &&
 				i + amt >= 0
@@ -267,7 +267,7 @@
 		let closeSpan = createElement( 'span', { 'class' : TTM_LIGHTBOX_SCREENREADER_CLASS } );
 		let closeText = document.createTextNode( __( 'Close' ) );
 		closeSpan.appendChild( closeText );
-		close.appendChild( closeSpan );		
+		close.appendChild( closeSpan );
 		close.addEventListener( 'click', closeLightbox );
 		inner.appendChild( close );
 
@@ -308,7 +308,7 @@
 
 		return i18n[ lang as keyof object ][ valueToTranslate ];
 	}
-		
+
 	function checkDirection() {
 		if( touchendX < touchstartX ) {
 			moveLightbox(1);
