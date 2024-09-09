@@ -44,17 +44,18 @@
     var lastFocus = null;
     var touchstartX = 0;
     var touchendX = 0;
+    var focusElement = function (el) { return el.focus(); };
     var keydownEvent = function (event) {
         if (!hasLightbox())
             return;
         switch (event.key) {
             case 'ArrowLeft':
                 moveLightbox(-1);
-                document.querySelector(TTM_LIGHTBOX_PREV_SELECTOR).focus();
+                focusElement(document.querySelector(TTM_LIGHTBOX_PREV_SELECTOR));
                 break;
             case 'ArrowRight':
                 moveLightbox(1);
-                document.querySelector(TTM_LIGHTBOX_NEXT_SELECTOR).focus();
+                focusElement(document.querySelector(TTM_LIGHTBOX_NEXT_SELECTOR));
                 break;
             case 'Escape':
                 closeLightbox();
@@ -78,7 +79,7 @@
         var inner = getInnerLightbox();
         var temp = img.cloneNode();
         temp.removeAttribute(TTM_LIGHTBOX_IMAGE_ATTRIBUTE);
-        var clone = temp.cloneNode(temp);
+        var clone = temp.cloneNode();
         clone.classList.add(TTM_LIGHTBOX_IMAGE_CLASS);
         clone.classList.add(TTM_LIGHTBOX_FADE_CLASS);
         inner.appendChild(clone);
@@ -102,7 +103,7 @@
         var next = document.querySelector(TTM_LIGHTBOX_NEXT_SELECTOR);
         if (isLastImageInLightbox(img.src)) {
             disableElement(next);
-            document.querySelector(TTM_LIGHTBOX_CLOSE_SELECTOR).focus();
+            focusElement(document.querySelector(TTM_LIGHTBOX_CLOSE_SELECTOR));
         }
         else {
             enableElement(next);
@@ -181,7 +182,7 @@
             }, TTM_LIGHTBOX_TIMEOUT_SHORT);
         }, TTM_LIGHTBOX_TIMEOUT_LONG);
         if (lastFocus !== null) {
-            lastFocus.focus();
+            focusElement(lastFocus);
         }
     };
     var getLightbox = function () { return document.getElementById(TTM_LIGHTBOX_ID); };
@@ -230,7 +231,7 @@
         next.addEventListener('click', function () { return moveLightbox(1); });
         inner.appendChild(next);
         document.body.appendChild(lightbox);
-        document.querySelector(TTM_LIGHTBOX_NEXT_SELECTOR).focus();
+        focusElement(document.querySelector(TTM_LIGHTBOX_NEXT_SELECTOR));
     };
     var __ = function (valueToTranslate) {
         var lang = navigator.language;
@@ -273,7 +274,7 @@
                 box.click();
             }
             if (hasLightbox()) {
-                document.querySelector(TTM_LIGHTBOX_NEXT_SELECTOR).focus();
+                focusElement(document.querySelector(TTM_LIGHTBOX_NEXT_SELECTOR));
             }
         });
     });

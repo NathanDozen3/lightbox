@@ -48,9 +48,11 @@
 	const TTM_LIGHTBOX_TIMEOUT_SHORT = 50;
 	const TTM_LIGHTBOX_TIMEOUT_LONG = 300;
 
-	let lastFocus = null;
+	let lastFocus : HTMLElement|null = null;
 	let touchstartX = 0
 	let touchendX = 0
+
+	const focusElement = ( el : Element ) => (el as HTMLElement).focus();
 
 	const keydownEvent = ( event : KeyboardEvent ) => {
 		if( ! hasLightbox() ) return;
@@ -58,11 +60,11 @@
 		switch( event.key ) {
 			case 'ArrowLeft' :
 				moveLightbox(-1);
-				(document.querySelector( TTM_LIGHTBOX_PREV_SELECTOR ) as HTMLElement).focus();
+				focusElement( document.querySelector( TTM_LIGHTBOX_PREV_SELECTOR ) );
 				break;
 			case 'ArrowRight' :
 				moveLightbox(1);
-				(document.querySelector( TTM_LIGHTBOX_NEXT_SELECTOR ) as HTMLElement ).focus();
+				focusElement( document.querySelector( TTM_LIGHTBOX_NEXT_SELECTOR ) );
 				break;
 			case 'Escape' :
 				closeLightbox();
@@ -70,7 +72,7 @@
 		}
 	}
 
-	const addImgToLightbox = ( img ) => {
+	const addImgToLightbox = ( img : HTMLImageElement ) => {
 		let lightbox = getLightbox();
 		lightbox.querySelectorAll( TTM_LIGHTBOX_IMAGE_SELECTOR ).forEach( ( img ) => {
 			img.classList.add( TTM_LIGHTBOX_FADE_CLASS );
@@ -86,9 +88,9 @@
 		});
 
 		let inner = getInnerLightbox();			
-		let temp = img.cloneNode();
+		let temp = img.cloneNode() as HTMLImageElement;
 		temp.removeAttribute( TTM_LIGHTBOX_IMAGE_ATTRIBUTE );
-		let clone = temp.cloneNode(temp);
+		let clone = temp.cloneNode() as HTMLImageElement;
 		clone.classList.add( TTM_LIGHTBOX_IMAGE_CLASS );
 		clone.classList.add( TTM_LIGHTBOX_FADE_CLASS );
 
@@ -106,7 +108,7 @@
 
 		setTimeout( () => { clone.classList.remove( TTM_LIGHTBOX_FADE_CLASS ) }, TTM_LIGHTBOX_TIMEOUT_SHORT );
 
-		let prev = document.querySelector( TTM_LIGHTBOX_PREV_SELECTOR );
+		let prev = document.querySelector( TTM_LIGHTBOX_PREV_SELECTOR ) as HTMLButtonElement;
 		if( isFirstImageInLightbox( img.src ) ) {
 			disableElement( prev );
 		}
@@ -114,32 +116,32 @@
 			enableElement( prev );
 		}
 
-		let next = document.querySelector( TTM_LIGHTBOX_NEXT_SELECTOR );
+		let next = document.querySelector( TTM_LIGHTBOX_NEXT_SELECTOR ) as HTMLButtonElement;
 		if( isLastImageInLightbox( img.src ) ) {
 			disableElement( next );
-			( document.querySelector( TTM_LIGHTBOX_CLOSE_SELECTOR ) as HTMLElement ).focus();
+			focusElement( document.querySelector( TTM_LIGHTBOX_CLOSE_SELECTOR ) );
 		}
 		else {
 			enableElement( next );
 		}
 	}
 
-	const enableElement = ( el ) => {
+	const enableElement = ( el : HTMLButtonElement ) => {
 		el.classList.remove( TTM_LIGHTBOX_DISABLED_CLASS );
 		el.disabled = false;
 	}
 
-	const disableElement = ( el ) => {
+	const disableElement = ( el : HTMLButtonElement ) => {
 		el.classList.add( TTM_LIGHTBOX_DISABLED_CLASS );
 		el.disabled = true;
 	}
 
-	const isFirstImageInLightbox = ( src ) => {
+	const isFirstImageInLightbox = ( src : string ) => {
 		let subset = getCurrentLightboxSubset();
 		return src === subset[0].getAttribute( 'src' );
 	}
 
-	const isLastImageInLightbox = ( src ) => {
+	const isLastImageInLightbox = ( src : string ) => {
 		let subset = getCurrentLightboxSubset();
 		return src === subset[ subset.length - 1 ].getAttribute( 'src' );
 	}
@@ -161,11 +163,11 @@
 			}
 		}
 		
-		let subset = document.querySelectorAll( '[' + TTM_LIGHTBOX_IMAGE_ATTRIBUTE + '="' + attribute + '"]' );
+		let subset = document.querySelectorAll( '[' + TTM_LIGHTBOX_IMAGE_ATTRIBUTE + '="' + attribute + '"]' ) as NodeListOf<HTMLImageElement>;
 		return subset;
 	}
 
-	const moveLightbox = ( amt ) => {
+	const moveLightbox = ( amt : number ) => {
 		let current = getCurrentLightboxImage();
 		let subset = getCurrentLightboxSubset();
 		
@@ -181,7 +183,7 @@
 		}
 	}
 
-	const boxClickEvent = ( img ) => {
+	const boxClickEvent = ( img : HTMLImageElement ) => {
 		showLightbox();
 		addImgToLightbox( img );
 	}
@@ -217,7 +219,7 @@
 		}, TTM_LIGHTBOX_TIMEOUT_LONG );
 
 		if( lastFocus !== null ) {
-			lastFocus.focus();
+			focusElement( lastFocus );
 		}
 	}
 
@@ -230,8 +232,8 @@
 		return lightbox.querySelector( TTM_LIGHTBOX_INNER_SELECTOR );
 	}
 
-	const createElement = ( name, atts ) => {
-		const el = document.createElement( name );
+	const createElement = ( name : string, atts : object) => {
+		const el = document.createElement( name ) as HTMLElement;
 		for( let [ key, value ] of Object.entries( atts ) ) {
 			if( Array.isArray( value ) ) {
 				value = value.join( ' ' );
@@ -275,25 +277,25 @@
 		inner.appendChild( next );
 
 		document.body.appendChild( lightbox );
-		( document.querySelector( TTM_LIGHTBOX_NEXT_SELECTOR ) as HTMLElement ).focus();
+		focusElement( document.querySelector( TTM_LIGHTBOX_NEXT_SELECTOR ) );
 	}
 
-	const __ = ( valueToTranslate ) => {
+	const __ = ( valueToTranslate : string ) => {
 		let lang = navigator.language;
 
-		if( null == i18n[ lang ] ) {
+		if( null == i18n[ lang as keyof object ] ) {
 			lang = lang.slice( 0, lang.indexOf( '-' ) );
 		}
 
-		if( null == i18n[ lang ] ) {
+		if( null == i18n[ lang as keyof object ] ) {
 			return valueToTranslate;
 		}
 
-		if( null == i18n[ lang ][ valueToTranslate ] ) {
+		if( null == i18n[ lang as keyof object ][ valueToTranslate ] ) {
 			return valueToTranslate;
 		}
 
-		return i18n[ lang ][ valueToTranslate ];
+		return i18n[ lang as keyof object ][ valueToTranslate ];
 	}
 		
 	function checkDirection() {
@@ -323,15 +325,15 @@
 		box.setAttribute( 'tabindex', '0' );
 		box.setAttribute( 'role', 'button' );
 
-		box.addEventListener( 'click', () => { boxClickEvent( box ) } );
+		box.addEventListener( 'click', () => { boxClickEvent( box as HTMLImageElement ) } );
 		box.addEventListener( 'keydown', ( event : KeyboardEvent ) => {
-			lastFocus = event.target;
+			lastFocus = event.target as HTMLElement;
 
 			if( event.code === 'Space' || event.code === 'Enter' ) {
 				( box as HTMLElement ).click();
 			}
 			if( hasLightbox() ) {
-				( document.querySelector( TTM_LIGHTBOX_NEXT_SELECTOR ) as HTMLElement ).focus();
+				focusElement( document.querySelector( TTM_LIGHTBOX_NEXT_SELECTOR ) );
 			}
 		});
 	});
