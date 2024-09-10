@@ -1,7 +1,14 @@
 .ttm-lightbox {
+  --backdrop-background-color: rgb( 0 0 0 / 80% );
   --border-color: rgb( 255 255 255 / 80% );
   --border-style: solid;
   --border-width: 0.25rem;
+  --button-background-color: rgb( 255 255 255 / 50% );
+  --button-padding: 1.25rem;
+  --caption-background-color: rgb(255 255 255 / 80%);
+  --focus-background-color: rgb( 255 255 255 / 50% );
+  --focus-opacity: 1;
+  --focus-outline: 2px solid white;
   --height: calc( 100dvh - 75px );
   --transition-duration: 300ms;
   --transition-timing-function: ease-in-out;
@@ -35,10 +42,10 @@
   z-index: 1024;
 }
 .ttm-lightbox-button::after {
-  background-color: rgba(255, 255, 255, 0.25);
+  background-color: var(--button-background-color);
   background-size: contain;
   content: "";
-  padding: 20px;
+  padding: var(--button-padding);
   transition-duration: var(--transition-duration);
   transition-property: background, opacity;
   transition-timing-function: var(--transition-timing-function);
@@ -47,12 +54,12 @@
   outline: none;
 }
 .ttm-lightbox-button:focus::after, .ttm-lightbox-button:focus-visible::after, .ttm-lightbox-button:hover::after {
-  background-color: rgba(255, 255, 255, 0.5);
-  opacity: 1;
-  outline: 2px solid white;
+  background-color: var(--focus-background-color);
+  opacity: var(--focus-opacity);
+  outline: var(--focus-outline);
 }
 .ttm-lightbox-caption {
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: var(--caption-background-color);
   bottom: 0;
   left: 0;
   padding: 1rem;
@@ -110,7 +117,6 @@
   width: 50%;
 }
 .ttm-lightbox-nav::after {
-  padding: 20px;
   position: absolute;
 }
 .ttm-lightbox-next {
@@ -139,7 +145,7 @@
   width: 1px;
 }
 .ttm-lightbox-show {
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: var(--backdrop-background-color);
   opacity: 1;
 }
 
