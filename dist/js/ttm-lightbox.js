@@ -154,11 +154,11 @@
         return subset;
     };
     var moveLightbox = function (amt) {
-        var _a, _b;
+        var _a;
         var current = getCurrentLightboxImage();
         var subset = getCurrentLightboxSubset();
         for (var i = 0; i < subset.length; i++) {
-            if (current.getAttribute('src') === ((_b = (_a = subset[i]) === null || _a === void 0 ? void 0 : _a.querySelector('img')) === null || _b === void 0 ? void 0 : _b.getAttribute('src')) &&
+            if (current.getAttribute('src') === ((_a = subset[i]) === null || _a === void 0 ? void 0 : _a.getAttribute('href')) &&
                 i + amt < subset.length &&
                 i + amt >= 0) {
                 var a = subset[i + amt];

@@ -182,7 +182,7 @@
 
 		for( let i = 0; i < subset.length; i++ ) {
 			if(
-				current.getAttribute( 'src' ) === subset[i]?.querySelector( 'img' )?.getAttribute( 'src' ) &&
+				current.getAttribute( 'src' ) === subset[i]?.getAttribute( 'href' ) &&
 				i + amt < subset.length &&
 				i + amt >= 0
 			) {
